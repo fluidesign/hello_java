@@ -141,7 +141,7 @@ public class Login extends GuiObject implements ActionListener{
 				System.out.println("User is empty");
 			
 			if (passwordField.getPassword().length==0)
-				System.out.println("Password is wrong");
+				System.out.println("Password is empty");
 			
 			if(!iPValid.validate(serverIpField.getText().toString())){
 				
