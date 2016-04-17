@@ -1,6 +1,6 @@
 package gui;
 import helpers.IPAddressValidator;
-import helpers.messageBox;
+import helpers.MessageBox;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -43,7 +43,7 @@ public class Login extends GuiObject implements ActionListener{
 		// if expcetion found use predefied values
 		
 		if (useProperties){
-			messageBox.info("Trying to get properties", "Login");
+			MessageBox.info("Trying to get properties", "Login");
 		}
 		else{
 			loginFrameTitle="Login";
@@ -117,7 +117,7 @@ public class Login extends GuiObject implements ActionListener{
 			}
 		}
 		catch (Exception e){
-			messageBox.error("Get properties issue" + e, "getPropValues");
+			MessageBox.error("Get properties issue" + e, "getPropValues");
 
 		}
 		finally {
@@ -133,19 +133,19 @@ public class Login extends GuiObject implements ActionListener{
 		if (cmd.equals(buttonConnectText)){			
 			// validatore
 			if (userNameField.getText().isEmpty())
-				messageBox.error("User name is missing", "Login");
+				MessageBox.error("User name is missing", "Login");
 			
 			else if (passwordField.getPassword().length==0)
-				messageBox.error("Password is missing", "Login");
+				MessageBox.error("Password is missing", "Login");
 			
 			else if(!iPValid.validate(serverIpField.getText().toString()))
-				messageBox.error("Server IP is missing or wrong syntax", "Login");
+				MessageBox.error("Server IP is missing or wrong syntax", "Login");
 			else {
-				messageBox.info("All good","Login");
+				MessageBox.info("All good","Login");
 			}
 		}
 		else if(cmd.equals(buttonCloseText)){
-			messageBox.info("Good bye","Exit");
+			MessageBox.info("Good bye","Exit");
 			System.exit(0);
 		}
 	}

@@ -5,7 +5,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import javax.swing.JOptionPane;
 
-public class messageBox {
+public class MessageBox {
 
 	public static void info(String message) {
         info(message, whoCalledMe());
