@@ -1,5 +1,7 @@
 package gui;
 import helpers.IPAddressValidator;
+import helpers.messageBox;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.MaskFormatter;
@@ -36,13 +38,12 @@ public class Login extends GuiObject implements ActionListener{
 	private JLabel serverIpLabel;
 	private JTextField serverIpField;
 	
-	
 	@Override
 	public void draw(boolean useProperties) {
 		// if expcetion found use predefied values
 		
 		if (useProperties){
-			
+			messageBox.info("Trying to get properties", "Login");
 		}
 		else{
 			loginFrameTitle="Login";
@@ -102,10 +103,6 @@ public class Login extends GuiObject implements ActionListener{
 	}
 	
 	public String getPropValues() throws IOException {
-		// make sure file there and all values are valid
-		// password ? modified ? MITM ?
-		// encrypt properties using jasypt
-		
 		try{
 			Properties prop = new Properties();
 			String propFileName = "config.properties";
@@ -118,10 +115,10 @@ public class Login extends GuiObject implements ActionListener{
 			} else {
 				throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
 			}
-			
 		}
 		catch (Exception e){
-			System.out.println("Get properties issue" + e);
+			messageBox.error("Get properties issue" + e, "getPropValues");
+
 		}
 		finally {
 			inputStream.close();
@@ -133,24 +130,23 @@ public class Login extends GuiObject implements ActionListener{
 		String cmd = e.getActionCommand();
 		IPAddressValidator iPValid = new IPAddressValidator();
 		
-		if (cmd.equals(buttonConnectText)){
-			System.out.println("Connect was clicked");
-			
+		if (cmd.equals(buttonConnectText)){			
 			// validatore
 			if (userNameField.getText().isEmpty())
-				System.out.println("User is empty");
+				messageBox.error("User name is missing", "Login");
 			
-			if (passwordField.getPassword().length==0)
-				System.out.println("Password is empty");
+			else if (passwordField.getPassword().length==0)
+				messageBox.error("Password is missing", "Login");
 			
-			if(!iPValid.validate(serverIpField.getText().toString())){
-				
-				System.out.println("server IP is wrong");
+			else if(!iPValid.validate(serverIpField.getText().toString()))
+				messageBox.error("Server IP is missing or wrong syntax", "Login");
+			else {
+				messageBox.info("All good","Login");
 			}
-			
 		}
 		else if(cmd.equals(buttonCloseText)){
-			System.out.println("Close was clicked");
+			messageBox.info("Good bye","Exit");
+			System.exit(0);
 		}
 	}
 	

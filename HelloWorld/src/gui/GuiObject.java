@@ -9,6 +9,6 @@ public abstract class GuiObject {
 		
 		// build the login window
 		Login login = new Login();
-		login.draw(true);
+		login.draw(false);
 	}
 }
