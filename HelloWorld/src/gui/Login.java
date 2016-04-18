@@ -1,6 +1,7 @@
 package gui;
 import helpers.IPAddressValidator;
 import helpers.MessageBox;
+import sessionPkg.Connection;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -37,6 +38,9 @@ public class Login extends GuiObject implements ActionListener{
 	private JLabel passwordLabel;
 	private JLabel serverIpLabel;
 	private JTextField serverIpField;
+	
+	// session init
+	private Connection sessionConnection;
 	
 	@Override
 	public void draw(boolean useProperties) {
@@ -141,7 +145,12 @@ public class Login extends GuiObject implements ActionListener{
 			else if(!iPValid.validate(serverIpField.getText().toString()))
 				MessageBox.error("Server IP is missing or wrong syntax", "Login");
 			else {
-				MessageBox.info("All good","Login");
+				// till now we verified that the fields are not empty and their syntax
+				// lest see if we can connect to the server
+				
+				Connection connection = new Connection(userNameField.getText(), passwordField.getPassword(), serverIpField.getText());
+				if (connection.connect())
+					MessageBox.info("All good","Login");
 			}
 		}
 		else if(cmd.equals(buttonCloseText)){

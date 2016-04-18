@@ -33,9 +33,7 @@ public class MessageBox {
 
     public static void setClipboard(String message) {
         CLIPBOARD.setContents(new StringSelection(message), null);
-
     }
     private static final Toolkit AWT_TOOLKIT = Toolkit.getDefaultToolkit();
-    private static final Clipboard CLIPBOARD = AWT_TOOLKIT.getSystemClipboard();
-
+    private static final Clipboard CLIPBOARD = AWT_TOOLKIT.getSystemClipboard();    
 }
