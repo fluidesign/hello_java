@@ -1,11 +1,11 @@
 package gui;
 import helpers.IPAddressValidator;
 import helpers.MessageBox;
+import helpers.FileHelper;
 import sessionPkg.Connection;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.text.MaskFormatter;
 
 import java.util.Properties;
 import java.awt.BorderLayout;
@@ -16,7 +16,6 @@ import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.NumberFormat;
 
 // Login menu allows to use a predefined properties file to keep username, password [Enc.decr ?] and remote server
 public class Login extends GuiObject implements ActionListener{
@@ -25,12 +24,12 @@ public class Login extends GuiObject implements ActionListener{
 	// set menu text
 	private String loginFrameTitle;
 	private String buttonConnectText = "Connect";
-	private String buttonCloseText = "close";
+	private String buttonCloseText = "Close";
 	private String userNameHint = "Write your username";  
 	private String passwordHint = "Write your password";  
 	private String serverIpHint = "Write your server IP";
 
-	// set menu user input
+	// set J components 
 	private JPasswordField passwordField;
 	private JFrame loginFrame;
 	private JLabel userNameLabel;
@@ -39,15 +38,13 @@ public class Login extends GuiObject implements ActionListener{
 	private JLabel serverIpLabel;
 	private JTextField serverIpField;
 	
-	// session init
-	private Connection sessionConnection;
-	
 	@Override
 	public void draw(boolean useProperties) {
 		// if expcetion found use predefied values
 		
 		if (useProperties){
-			MessageBox.info("Trying to get properties", "Login");
+			if (FileHelper.isFileExists("File Path"))
+				System.out.println("load file");
 		}
 		else{
 			loginFrameTitle="Login";
@@ -63,6 +60,7 @@ public class Login extends GuiObject implements ActionListener{
         passwordField.setToolTipText(passwordHint);
 		serverIpLabel = new JLabel("Server IP: ");
 		serverIpField = new JTextField();
+		serverIpField.setToolTipText(serverIpHint);
         
         // https://docs.oracle.com/javase/tutorial/uiswing/layout/spring.html
         JPanel loginPanelInput = new JPanel(new BorderLayout(10, 10));
@@ -95,13 +93,16 @@ public class Login extends GuiObject implements ActionListener{
         
         JPanel loginPanel = new JPanel(new BorderLayout(10, 10));
         
-        loginPanel.setBorder(new TitledBorder("Averages"));
+        loginPanel.setBorder(new TitledBorder("Login credentials"));
         loginPanel.add(loginPanelInput, BorderLayout.CENTER);
         loginPanel.add(loginPanelControl, BorderLayout.SOUTH);
         
 		loginFrame.setContentPane(loginPanel);
 		loginFrame.pack();
-		loginFrame.setLocationByPlatform(true);
+		
+		if (((Float.parseFloat(System.getProperty("java.specification.version")))>1.4))
+				loginFrame.setLocationRelativeTo(null);
+		
 		loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		loginFrame.setVisible(true);
 	}
@@ -145,18 +146,26 @@ public class Login extends GuiObject implements ActionListener{
 			else if(!iPValid.validate(serverIpField.getText().toString()))
 				MessageBox.error("Server IP is missing or wrong syntax", "Login");
 			else {
-				// till now we verified that the fields are not empty and their syntax
-				// lest see if we can connect to the server
-				
-				Connection connection = new Connection(userNameField.getText(), passwordField.getPassword(), serverIpField.getText());
-				if (connection.connect())
-					MessageBox.info("All good","Login");
+				if (Connection.connect(userNameField.getText(), passwordField.getPassword(), serverIpField.getText())){
+					
+					loginFrame.setVisible(true);
+					Connection.sessionExec();
+					System.out.println(Connection.IpAddress);
+				}
+				else
+					loginFrame.setVisible(false);
 			}
 		}
 		else if(cmd.equals(buttonCloseText)){
 			MessageBox.info("Good bye","Exit");
 			System.exit(0);
 		}
+	}
+
+	@Override
+	public boolean visible(boolean setStatus) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 	
